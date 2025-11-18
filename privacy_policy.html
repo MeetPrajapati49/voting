@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - VoteEasy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .section-fade {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-size: 1.4rem;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+            z-index: 1000;
+        }
+        
+        .scroll-to-top.visible {
+            opacity: 1;
+        }
+        
+        .scroll-to-top:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .delete-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+        }
+        
+        .modal-backdrop {
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 font-sans">
+
+<!-- Header -->
+<header class="gradient-bg text-white shadow-2xl relative overflow-hidden">
+    <div class="floating-shapes">
+        <div class="shape w-64 h-64 bg-white rounded-full" style="top: -10%; left: -5%; animation-delay: -2s;"></div>
+        <div class="shape w-32 h-32 bg-white rounded-full" style="top: 20%; right: -5%; animation-delay: -4s;"></div>
+    </div>
+    <div class="container mx-auto px-6 py-6 relative z-10">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-shield-alt text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold">VoteEasy</h1>
+                    <p class="text-blue-100 text-sm">Secure Voting Platform</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="about.html" class="hover:text-purple-200 transition font-semibold">About</a>
+                <a href="backend/admin_dashboard.php" class="hover:text-purple-200 transition font-semibold">Admin</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="container mx-auto px-6 py-12">
+    
+    <!-- Hero Section -->
+    <section class="text-center mb-16 section-fade">
+        <div class="max-w-4xl mx-auto">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-xl">
+                <i class="fas fa-user-shield text-white text-3xl"></i>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold gradient-text mb-6">Privacy Policy</h1>
+            <p class="text-xl text-gray-600 mb-8 leading-relaxed">Your privacy is our top priority. We're committed to protecting your data with the highest standards of security and transparency.</p>
+            <div class="glass-effect rounded-2xl p-6 inline-block text-white">
+                <div class="flex items-center justify-center space-x-8 text-sm">
+                    <div class="text-center">
+                        <i class="fas fa-calendar-alt text-lg mb-2 block"></i>
+                        <p><strong>Effective:</strong> Jan 1, 2025</p>
+                    </div>
+                    <div class="w-px h-10 bg-white opacity-30"></div>
+                    <div class="text-center">
+                        <i class="fas fa-sync-alt text-lg mb-2 block"></i>
+                        <p><strong>Updated:</strong> Jan 15, 2025</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Navigation -->
+    <section class="mb-16 section-fade">
+        <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Quick Navigation</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="#overview" class="flex items-center justify-center p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl hover:shadow-lg transition-all duration-300 group">
+                    <i class="fas fa-info-circle text-blue-500 mr-3 group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium text-gray-700">Overview</span>
+                </a>
+                <a href="#data-collection" class="flex items-center justify-center p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl hover:shadow-lg transition-all duration-300 group">
+                    <i class="fas fa-database text-purple-500 mr-3 group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium text-gray-700">Data Collection</span>
+                </a>
+                <a href="#data-usage" class="flex items-center justify-center p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl hover:shadow-lg transition-all duration-300 group">
+                    <i class="fas fa-cogs text-green-500 mr-3 group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium text-gray-700">Usage</span>
+                </a>
+                <a href="#contact" class="flex items-center justify-center p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl hover:shadow-lg transition-all duration-300 group">
+                    <i class="fas fa-envelope text-red-500 mr-3 group-hover:scale-110 transition-transform"></i>
+                    <span class="font-medium text-gray-700">Contact</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="mb-16 section-fade">
+        <div class="bg-white rounded-3xl shadow-xl p-10 border border-gray-100 card-hover">
+            <div class="flex items-center mb-8">
+                <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mr-4">
+                    <i class="fas fa-info-circle text-blue-600 text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800">Overview</h2>
+            </div>
+            
+            <p class="text-gray-600 mb-8 text-lg leading-relaxed">Welcome to VoteEasy, your trusted online polling platform. This Privacy Policy explains how we collect, use, protect, and share your personal information when you use our polling services. We are committed to maintaining the highest standards of data protection and transparency.</p>
+            
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 mb-8 border-l-4 border-blue-500">
+                <div class="flex items-start">
+                    <i class="fas fa-shield-check text-blue-600 text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-3 text-lg">Our Commitment</h4>
+                        <p class="text-gray-700">We prioritize your privacy, use minimal data collection practices, and never sell your personal information to third parties. Your trust is our foundation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl">
+                    <div class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-lock text-white text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mb-2">Bank-Level Security</h4>
+                    <p class="text-sm text-gray-600">Advanced encryption protocols</p>
+                </div>
+                <div class="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl">
+                    <div class="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-balance-scale text-white text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mb-2">GDPR Compliant</h4>
+                    <p class="text-sm text-gray-600">Full regulatory compliance</p>
+                </div>
+                <div class="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl">
+                    <div class="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-user-secret text-white text-xl"></i>
+                    </div>
+                    <h4 class="font-bold text-gray-800 mb-2">Anonymous Voting</h4>
+                    <p class="text-sm text-gray-600">Complete privacy protection</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Collection Section -->
+    <section id="data-collection" class="mb-16 section-fade">
+        <div class="bg-white rounded-3xl shadow-xl p-10 border border-gray-100 card-hover">
+            <div class="flex items-center mb-8">
+                <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mr-4">
+                    <i class="fas fa-database text-purple-600 text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800">Information We Collect</h2>
+            </div>
+            
+            <div class="space-y-8">
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-user text-blue-600 mr-3"></i>Personal Information
+                    </h3>
+                    <p class="text-gray-600 mb-6">When you create an account or participate in polls, we may collect:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <i class="fas fa-user text-blue-500 text-lg mb-2"></i>
+                            <h4 class="font-semibold text-gray-800">Account Info</h4>
+                            <p class="text-sm text-gray-600">Username, encrypted password</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <i class="fas fa-user-circle text-green-500 text-lg mb-2"></i>
+                            <h4 class="font-semibold text-gray-800">Profile Data</h4>
+                            <p class="text-sm text-gray-600">Optional demographics, location</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-xl shadow-sm">
+                            <i class="fas fa-phone text-purple-500 text-lg mb-2"></i>
+                            <h4 class="font-semibold text-gray-800">Contact Info</h4>
+                            <p class="text-sm text-gray-600">For support purposes only</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-chart-line text-green-600 mr-3"></i>Usage Information
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <i class="fas fa-mobile-alt text-blue-500 text-2xl mb-4"></i>
+                            <h4 class="font-bold text-gray-800 mb-2">Device Information</h4>
+                            <p class="text-gray-600">IP address, browser type, operating system for security purposes</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <i class="fas fa-chart-bar text-green-500 text-2xl mb-4"></i>
+                            <h4 class="font-bold text-gray-800 mb-2">Usage Analytics</h4>
+                            <p class="text-gray-600">Pages visited, time spent to improve user experience</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Usage Section -->
+    <section id="data-usage" class="mb-16 section-fade">
+        <div class="bg-white rounded-3xl shadow-xl p-10 border border-gray-100 card-hover">
+            <div class="flex items-center mb-8">
+                <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mr-4">
+                    <i class="fas fa-cogs text-green-600 text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800">How We Use Your Information</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-blue-50 rounded-2xl p-6 border border-blue-200">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-tasks text-blue-600 mr-2"></i>Essential Services
+                    </h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-500 mr-3"></i>
+                            <span class="text-gray-700">Platform operation and maintenance</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-500 mr-3"></i>
+                            <span class="text-gray-700">Poll administration and results</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-500 mr-3"></i>
+                            <span class="text-gray-700">Account security and authentication</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-purple-50 rounded-2xl p-6 border border-purple-200">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-envelope text-purple-600 mr-2"></i>Communication
+                    </h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-purple-500 mr-3"></i>
+                            <span class="text-gray-700">Important account notifications</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-purple-500 mr-3"></i>
+                            <span class="text-gray-700">Customer support responses</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-purple-500 mr-3"></i>
+                            <span class="text-gray-700">Platform updates (with consent)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl p-6 border-l-4 border-red-500">
+                <div class="flex items-start">
+                    <i class="fas fa-ban text-red-600 text-2xl mr-4 mt-1"></i>
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-2 text-lg">We Never Sell Your Data</h4>
+                        <p class="text-gray-700">We never sell your personal information to third parties. Your data is used solely for providing our services and improving your experience.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Your Rights & Account Deletion -->
+    <section class="mb-16 section-fade">
+        <div class="bg-white rounded-3xl shadow-xl p-10 border border-gray-100 card-hover">
+            <div class="flex items-center mb-8">
+                <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mr-4">
+                    <i class="fas fa-user-shield text-indigo-600 text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800">Your Privacy Rights</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl card-hover cursor-pointer" onclick="requestDataAccess()">
+                    <i class="fas fa-eye text-blue-600 text-3xl mb-4"></i>
+                    <h3 class="font-bold text-gray-800 mb-2">Access</h3>
+                    <p class="text-gray-600 text-sm">Request a copy of your personal data</p>
+                </div>
+                <div class="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl card-hover cursor-pointer" onclick="correctData()">
+                    <i class="fas fa-edit text-green-600 text-3xl mb-4"></i>
+                    <h3 class="font-bold text-gray-800 mb-2">Correction</h3>
+                    <p class="text-gray-600 text-sm">Update or correct your information</p>
+                </div>
+                <div class="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl card-hover cursor-pointer" onclick="downloadData()">
+                    <i class="fas fa-download text-purple-600 text-3xl mb-4"></i>
+                    <h3 class="font-bold text-gray-800 mb-2">Portability</h3>
+                    <p class="text-gray-600 text-sm">Download your data</p>
+                </div>
+                <div class="text-center p-6 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl card-hover cursor-pointer" onclick="optOut()">
+                    <i class="fas fa-times-circle text-yellow-600 text-3xl mb-4"></i>
+                    <h3 class="font-bold text-gray-800 mb-2">Opt-out</h3>
+                    <p class="text-gray-600 text-sm">Unsubscribe from communications</p>
+                </div>
+                <div class="text-center p-6 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl card-hover cursor-pointer" onclick="viewRegionalRights()">
+                    <i class="fas fa-globe text-indigo-600 text-3xl mb-4"></i>
+                    <h3 class="font-bold text-gray-800 mb-2">Regional Rights</h3>
+                    <p class="text-gray-600 text-sm">GDPR, CCPA compliance</p>
+                </div>
+                <div class="text-center p-6 bg-gradient-to-br from-red-50 to-red-100 rounded-2xl card-hover cursor-pointer" onclick="document.getElementById('deleteAccountBtn').click()">
+                    <i class="fas fa-trash-alt text-red-600 text-3xl mb-4"></i>
+                    <h3 class="font-bold text-gray-800 mb-2">Account Deletion</h3>
+                    <p class="text-gray-600 text-sm">Permanently delete your account</p>
+                </div>
+            </div>
+
+            <!-- Account Deletion Section -->
+            <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl p-8 border-l-4 border-red-500">
+                <div class="flex items-start justify-between">
+                    <div class="flex items-start flex-1">
+                        <i class="fas fa-exclamation-triangle text-red-600 text-2xl mr-4 mt-1"></i>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-800 mb-3 text-xl">Delete Your Account</h4>
+                            <p class="text-gray-700 mb-4">If you wish to permanently delete your account and all associated data, you can do so here. This action is irreversible and will remove all your personal information from our database.</p>
+                            <ul class="text-sm text-gray-600 mb-6 space-y-1">
+                                <li>• All personal information will be permanently deleted</li>
+                                <li>• Account recovery will not be possible after deletion</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button id="deleteAccountBtn" class="delete-btn text-white px-8 py-4 rounded-xl font-semibold shadow-lg ml-6 whitespace-nowrap">
+                        <i class="fas fa-trash-alt mr-2"></i>
+                        Delete Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="mb-16 section-fade">
+        <div class="gradient-bg text-white rounded-3xl shadow-2xl overflow-hidden relative">
+            <div class="floating-shapes">
+                <div class="shape w-32 h-32 bg-white rounded-full" style="top: 10%; left: 80%; animation-delay: -1s;"></div>
+                <div class="shape w-20 h-20 bg-white rounded-full" style="bottom: 20%; left: 10%; animation-delay: -3s;"></div>
+            </div>
+            <div class="p-10 relative z-10">
+                <div class="text-center mb-10">
+                    <div class="w-20 h-20 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-envelope text-4xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-4">Contact Our Privacy Team</h2>
+                    <p class="text-xl text-blue-100">Have questions about our Privacy Policy? We're here to help.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div class="glass-effect rounded-2xl p-6">
+                        <i class="fas fa-user text-3xl mb-4"></i>
+                        <h3 class="font-bold mb-2 text-xl">Live Chat</h3>
+                        <p class="text-lg">Support Portal</p>
+                        <p class="text-sm text-blue-200 mt-2">24/7 Available</p>
+                        <button class="mt-3 px-4 py-2 bg-white bg-opacity-20 rounded-lg hover:bg-opacity-30 transition">
+                            Start Chat
+                        </button>
+                    </div>
+                    <div class="glass-effect rounded-2xl p-6">
+                        <i class="fas fa-phone text-3xl mb-4"></i>
+                        <h3 class="font-bold mb-2 text-xl">Phone</h3>
+                        <p class="text-lg">+91 (123) 456-7890</p>
+                        <p class="text-sm text-blue-200 mt-2">Mon-Fri, 9AM-6PM IST</p>
+                    </div>
+                    <div class="glass-effect rounded-2xl p-6">
+                        <i class="fas fa-map-marker-alt text-3xl mb-4"></i>
+                        <h3 class="font-bold mb-2 text-xl">Address</h3>
+                        <p class="text-lg">123 VoteEasy Street</p>
+                        <p class="text-sm text-blue-200 mt-2">Voting City, India</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Notification Modal -->
+<div id="notificationModal" class="fixed inset-0 modal-backdrop z-50 hidden">
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative">
+            <div class="text-center">
+                <div id="notificationIcon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i id="notificationIconClass" class="text-2xl"></i>
+                </div>
+                <h3 id="notificationTitle" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                <p id="notificationMessage" class="text-gray-600 mb-6"></p>
+                <button id="closeNotification" class="px-6 py-3 rounded-xl font-medium transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Account Deletion Modal -->
+<div id="deleteModal" class="fixed inset-0 modal-backdrop z-50 hidden">
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Delete Account</h3>
+                <p class="text-gray-600">This action cannot be undone. All your data will be permanently deleted.</p>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Enter your username to confirm:</label>
+                <input type="text" id="confirmUsername" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="your_username">
+            </div>
+            
+            <div class="flex space-x-4">
+                <button id="cancelDelete" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition">
+                    Cancel
+                </button>
+                <button id="confirmDelete" class="flex-1 px-6 py-3 bg-red-600 text-white rounded-xl font-medium hover:bg-red-700 transition" disabled>
+                    Delete Account
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div id="successModal" class="fixed inset-0 modal-backdrop z-50 hidden">
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Account Deleted</h3>
+                <p class="text-gray-600 mb-6">Your account and all associated data have been permanently deleted from our database.</p>
+                <button id="closeSuccess" class="px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-16">
+    <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-vote-yea text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold">VoteEasy</h3>
+                </div>
+                <p class="text-gray-400 leading-relaxed">Secure online voting platform for organizations and institutions worldwide.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-lg">Platform</h4>
+                <ul class="space-y-3">
+                    <li><button class="text-gray-400 hover:text-white transition" onclick="goToHome()">Home</button></li>
+                    <li><button class="text-gray-400 hover:text-white transition" onclick="goToElections()">Elections</button></li>
+                    <li><button class="text-gray-400 hover:text-white transition" onclick="goToResults()">Results</button></li>
+                    <li><button class="text-gray-400 hover:text-white transition" onclick="goToAbout()">About</button></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-lg">Legal</h4>
+                <ul class="space-y-3">
+                    <li><button class="text-gray-400 hover:text-white transition" onclick="viewPrivacyPolicy()">Privacy Policy</button></li>
+                    <li><button class="text-gray-400 hover:text-white transition" onclick="viewTerms()">Terms of Service</button></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-lg">Support</h4>
+                <ul class="space-y-3">
+                    <li class="flex items-center">
+                        <i class="fas fa-user mr-3 text-gray-400"></i>
+                        <span class="text-gray-400">Contact Support Portal</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-phone mr-3 text-gray-400"></i>
+                        <span class="text-gray-400">+91 (123) 456-7890</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-map-marker-alt mr-3 text-gray-400"></i>
+                        <span class="text-gray-400">Voting City</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 pt-8 text-center">
+            <p class="text-gray-400">&copy; 2025 VoteEasy. All rights reserved. Built with privacy in mind.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" class="scroll-to-top">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+    // Scroll to top functionality
+    const scrollBtn = document.getElementById('scrollToTopBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 200) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
+    });
+    scrollBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Account deletion functionality
+    const deleteBtn = document.getElementById('deleteAccountBtn');
+    const deleteModal = document.getElementById('deleteModal');
+    const successModal = document.getElementById('successModal');
+    const cancelBtn = document.getElementById('cancelDelete');
+    const confirmBtn = document.getElementById('confirmDelete');
+    const confirmUsername = document.getElementById('confirmUsername');
+    const closeSuccessBtn = document.getElementById('closeSuccess');
+    const notificationModal = document.getElementById('notificationModal');
+    const closeNotificationBtn = document.getElementById('closeNotification');
+
+    // Demo username for validation (in real app, this would be fetched from user session)
+    const currentUsername = 'demo_user';
+
+    deleteBtn.addEventListener('click', () => {
+        deleteModal.classList.remove('hidden');
+        confirmUsername.value = '';
+        confirmBtn.disabled = true;
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        deleteModal.classList.add('hidden');
+    });
+
+    closeSuccessBtn.addEventListener('click', () => {
+        successModal.classList.add('hidden');
+    });
+
+    closeNotificationBtn.addEventListener('click', () => {
+        notificationModal.classList.add('hidden');
+    });
+
+    // Enable confirm button only when username matches
+    confirmUsername.addEventListener('input', (e) => {
+        if (e.target.value === currentUsername) {
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('opacity-50');
+        } else {
+            confirmBtn.disabled = true;
+            confirmBtn.classList.add('opacity-50');
+        }
+    });
+
+    // Simulate account deletion
+    confirmBtn.addEventListener('click', () => {
+        // Show loading state
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Deleting...';
+        confirmBtn.disabled = true;
+        
+        setTimeout(() => {
+            deleteModal.classList.add('hidden');
+            successModal.classList.remove('hidden');
+            
+            // Reset button state
+            confirmBtn.innerHTML = '<i class="fas fa-trash-alt mr-2"></i>Delete Account';
+            confirmBtn.disabled = false;
+        }, 2000);
+    });
+
+    // Close modals when clicking outside
+    [deleteModal, successModal, notificationModal].forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    });
+
+    // Utility function to show notifications
+    function showNotification(title, message, type = 'info') {
+        const iconElement = document.getElementById('notificationIcon');
+        const iconClass = document.getElementById('notificationIconClass');
+        const titleElement = document.getElementById('notificationTitle');
+        const messageElement = document.getElementById('notificationMessage');
+        const closeBtn = document.getElementById('closeNotification');
+
+        // Set content
+        titleElement.textContent = title;
+        messageElement.textContent = message;
+
+        // Set styles based on type
+        switch(type) {
+            case 'success':
+                iconElement.className = 'w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4';
+                iconClass.className = 'fas fa-check text-green-600 text-2xl';
+                closeBtn.className = 'px-6 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition';
+                break;
+            case 'info':
+                iconElement.className = 'w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4';
+                iconClass.className = 'fas fa-info-circle text-blue-600 text-2xl';
+                closeBtn.className = 'px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition';
+                break;
+            case 'warning':
+                iconElement.className = 'w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4';
+                iconClass.className = 'fas fa-exclamation-triangle text-yellow-600 text-2xl';
+                closeBtn.className = 'px-6 py-3 bg-yellow-600 text-white rounded-xl font-medium hover:bg-yellow-700 transition';
+                break;
+        }
+
+        notificationModal.classList.remove('hidden');
+    }
+
+    // Navigation functions
+    function goToHome() {
+        showNotification('Navigation', 'Redirecting to Home page...', 'info');
+        setTimeout(() => {
+            notificationModal.classList.add('hidden');
+            // window.location.href = '/home';
+        }, 1500);
+    }
+
+    function goToElections() {
+        showNotification('Navigation', 'Redirecting to Elections page...', 'info');
+        setTimeout(() => {
+            notificationModal.classList.add('hidden');
+            // window.location.href = '/elections';
+        }, 1500);
+    }
+
+    function goToResults() {
+        showNotification('Navigation', 'Redirecting to Results page...', 'info');
+        setTimeout(() => {
+            notificationModal.classList.add('hidden');
+            // window.location.href = '/results';
+        }, 1500);
+    }
+
+    function goToAbout() {
+        showNotification('Navigation', 'Redirecting to About page...', 'info');
+        setTimeout(() => {
+            notificationModal.classList.add('hidden');
+            // window.location.href = '/about';
+        }, 1500);
+    }
+
+    // Privacy rights functions
+    function requestDataAccess() {
+        showNotification('Data Access Request', 'Your data access request has been submitted. You will receive your data within 30 days.', 'success');
+    }
+
+    function correctData() {
+        showNotification('Data Correction', 'Opening data correction form...', 'info');
+        setTimeout(() => {
+            notificationModal.classList.add('hidden');
+            // window.location.href = '/profile/edit';
+        }, 1500);
+    }
+
+    function downloadData() {
+        showNotification('Data Download', 'Preparing your data for download. This may take a few minutes...', 'info');
+        setTimeout(() => {
+            showNotification('Download Ready', 'Your data has been prepared and download will start shortly.', 'success');
+        }, 3000);
+    }
+
+    function optOut() {
+        showNotification('Communication Preferences', 'Opening communication preferences...', 'info');
+        setTimeout(() => {
+            notificationModal.classList.add('hidden');
+            // window.location.href = '/preferences/communications';
+        }, 1500);
+    }
+
+    function viewRegionalRights() {
+        showNotification('Regional Rights', 'Displaying regional privacy rights information based on your location...', 'info');
+    }
+
+    // Legal page functions
+    function viewPrivacyPolicy() {
+        showNotification('Already Here', 'You are currently viewing the Privacy Policy page.', 'info');
+    }
+
+    function viewTerms() {
+        showNotification('Terms of Service', 'Redirecting to Terms of Service...', 'info');
+        setTimeout(() => {
+            notificationModal.classList.add('hidden');
+            // window.location.href = '/terms';
+        }, 1500);
+    }
+
+    function viewSecurity() {
+        showNotification('Security Information', 'Redirecting to Security page...', 'info');
+        setTimeout(() => {
+            notificationModal.classList.add('hidden');
+            // window.location.href = '/security';
+        }, 1500);
+    }
+
+    function viewCompliance() {
+        showNotification('Compliance Information', 'Redirecting to Compliance page...', 'info');
+        setTimeout(() => {
+            notificationModal.classList.add('hidden');
+            // window.location.href = '/compliance';
+        }, 1500);
+    }
+
+    // Contact functions
+    window.startChat = function() {
+        showNotification('Live Chat', 'Connecting you to our support team...', 'info');
+        setTimeout(() => {
+            showNotification('Chat Started', 'You are now connected with a support representative.', 'success');
+        }, 2000);
+    };
+
+    // Make functions globally accessible
+    window.goToHome = goToHome;
+    window.goToElections = goToElections;
+    window.goToResults = goToResults;
+    window.goToAbout = goToAbout;
+    window.requestDataAccess = requestDataAccess;
+    window.correctData = correctData;
+    window.downloadData = downloadData;
+    window.optOut = optOut;
+    window.viewRegionalRights = viewRegionalRights;
+    window.viewPrivacyPolicy = viewPrivacyPolicy;
+    window.viewTerms = viewTerms;
+    window.viewSecurity = viewSecurity;
+    window.viewCompliance = viewCompliance;2000;
+
+    // Section fade-in animation on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observe all sections
+    document.querySelectorAll('.section-fade').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(section);
+    });
+
+    // Smooth scroll for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - VoteEasy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+        .vote-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .user-logged-out .user-section { display: none !important; }
+        .user-logged-in .login-section { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans user-logged-out">
+
+<!-- Header -->
+<header class="gradient-bg text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-vote-yea text-2xl"></i>
+                <h1 class="text-2xl font-bold">VoteEasy</h1>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="about.html" class="hover:text-purple-200 transition">About</a>
+                <a href="admin_dashboard.php" class="hover:text-yellow-300 font-semibold">Admin</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <div class="login-section">
+                    <button id="login-btn" class="bg-white text-purple-600 px-4 py-2 rounded-full font-medium hover:bg-purple-100 transition">
+                        Login
+                    </button>
+                </div>
+                <div class="user-section flex items-center space-x-4">
+                    <span class="text-purple-100">Welcome, <span id="user-email"></span></span>
+                    <button id="logout-btn" class="bg-purple-800 text-white px-4 py-2 rounded-full font-medium hover:bg-purple-900 transition">Logout</button>
+                </div>
+                <button class="md:hidden text-2xl" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile menu -->
+<div id="mobile-menu" class="hidden md:hidden bg-purple-800 px-4 py-2">
+    <a href="index.html" class="block py-2 hover:text-purple-200 transition">Home</a>
+    <a href="poll.html" class="block py-2 hover:text-purple-200 transition">Elections</a>
+    <a href="result.html" class="block py-2 hover:text-purple-200 transition">Results</a>
+    <a href="about.html" class="block py-2 hover:text-purple-200 transition">About</a>
+    <a href="admin_dashboard.php" class="block py-2 text-yellow-300 font-semibold">Admin</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <section class="gradient-bg text-white rounded-xl p-8 mb-10 shadow-lg">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="flex items-center justify-center mb-4">
+                <i class="fas fa-file-contract text-4xl mr-4"></i>
+                <h1 class="text-3xl md:text-4xl font-bold">Terms of Service</h1>
+            </div>
+            <p class="text-lg md:text-xl">Last updated: January 22, 2025</p>
+        </div>
+    </section>
+
+    <!-- Terms Content -->
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-xl shadow-md p-8 mb-8">
+            <div class="prose prose-purple max-w-none">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-info-circle text-purple-600 mr-3"></i>
+                    1. Acceptance of Terms
+                </h2>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    By accessing and using VoteEasy's online voting platform, you accept and agree to be bound by the terms and provision of this agreement. These Terms of Service ("Terms") govern your use of our website and services provided by VoteEasy ("we," "us," or "our").
+                </p>
+                <p class="text-gray-700 mb-8 leading-relaxed">
+                    If you do not agree to abide by the above, please do not use this service. We reserve the right to modify these terms at any time without prior notice.
+                </p>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-user-shield text-purple-600 mr-3"></i>
+                    2. User Account and Eligibility
+                </h2>
+                <div class="bg-purple-50 border-l-4 border-purple-600 p-6 mb-6">
+                    <h4 class="font-bold text-purple-800 mb-3">Account Requirements:</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li>You must be at least 18 years of age to create an account</li>
+                        <li>You must provide accurate and complete registration information</li>
+                        <li>You are responsible for maintaining the security of your account credentials</li>
+                        <li>You must be eligible to participate in the specific elections you vote in</li>
+                        <li>One account per person - duplicate accounts are prohibited</li>
+                    </ul>
+                </div>
+                <p class="text-gray-700 mb-8 leading-relaxed">
+                    You are responsible for all activities that occur under your account. Please notify us immediately of any unauthorized use of your account or any other breach of security.
+                </p>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-vote-yea text-purple-600 mr-3"></i>
+                    3. Voting Rules and Conduct
+                </h2>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                        <h4 class="font-bold text-green-800 mb-3 flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Permitted Actions
+                        </h4>
+                        <ul class="text-green-700 space-y-2 text-sm">
+                            <li>• Cast one vote per election</li>
+                            <li>• Review candidate information</li>
+                            <li>• Access election results after voting closes</li>
+                            <li>• Report technical issues</li>
+                        </ul>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+                        <h4 class="font-bold text-red-800 mb-3 flex items-center">
+                            <i class="fas fa-times-circle mr-2"></i>
+                            Prohibited Actions
+                        </h4>
+                        <ul class="text-red-700 space-y-2 text-sm">
+                            <li>• Multiple voting or vote manipulation</li>
+                            <li>• Sharing account credentials</li>
+                            <li>• Attempting to hack or disrupt the system</li>
+                            <li>• Intimidating or coercing other voters</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-shield-alt text-purple-600 mr-3"></i>
+                    4. Privacy and Data Security
+                </h2>
+                <p class="text-gray-700 mb-4 leading-relaxed">
+                    We take your privacy and the security of your voting data seriously. Our privacy practices include:
+                </p>
+                <div class="bg-blue-50 border-l-4 border-blue-600 p-6 mb-6">
+                    <ul class="list-disc list-inside text-gray-700 space-y-2">
+                        <li><strong>Vote Anonymity:</strong> Your individual votes are anonymous and cannot be traced back to your identity</li>
+                        <li><strong>Data Encryption:</strong> All voting data is encrypted during transmission and storage</li>
+                        <li><strong>Limited Data Collection:</strong> We only collect information necessary for election integrity</li>
+                        <li><strong>No Vote Selling:</strong> We will never sell or share your voting preferences</li>
+                    </ul>
+                </div>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-gavel text-purple-600 mr-3"></i>
+                    5. Platform Availability and Technical Issues
+                </h2>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    While we strive to maintain 99.9% uptime, we cannot guarantee uninterrupted access to our services. We are not liable for any damages resulting from temporary unavailability, technical malfunctions, or system maintenance.
+                </p>
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
+                    <div class="flex items-start">
+                        <i class="fas fa-exclamation-triangle text-yellow-600 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-yellow-800 mb-2">Technical Support</h4>
+                            <p class="text-yellow-700 text-sm">
+                                If you experience technical difficulties during voting, contact our support team immediately at support@voteeasy.com. We provide 24/7 support during active election periods.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-ban text-purple-600 mr-3"></i>
+                    6. Prohibited Uses and Violations
+                </h2>
+                <p class="text-gray-700 mb-4 leading-relaxed">
+                    The following actions will result in immediate account suspension or termination:
+                </p>
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-gray-50 border rounded-lg p-4">
+                        <h5 class="font-semibold text-gray-800 mb-2">Security Violations:</h5>
+                        <ul class="text-gray-700 text-sm space-y-1">
+                            <li>• Attempting to breach system security</li>
+                            <li>• Using automated voting tools</li>
+                            <li>• Reverse engineering our platform</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-50 border rounded-lg p-4">
+                        <h5 class="font-semibold text-gray-800 mb-2">Election Fraud:</h5>
+                        <ul class="text-gray-700 text-sm space-y-1">
+                            <li>• Vote buying or selling</li>
+                            <li>• Impersonating other voters</li>
+                            <li>• Spreading election misinformation</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-balance-scale text-purple-600 mr-3"></i>
+                    7. Limitation of Liability
+                </h2>
+                <p class="text-gray-700 mb-8 leading-relaxed">
+                    VoteEasy provides this platform "as is" without warranties of any kind. We are not liable for any direct, indirect, incidental, or consequential damages arising from your use of our services. Our total liability shall not exceed the amount paid by you for using our services.
+                </p>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-sync-alt text-purple-600 mr-3"></i>
+                    8. Changes to Terms
+                </h2>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    We reserve the right to modify these Terms of Service at any time. Changes will be effective immediately upon posting on our website. Continued use of our services after changes constitutes acceptance of the new terms.
+                </p>
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-phone text-purple-600 mr-3"></i>
+                    9. Contact Information
+                </h2>
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
+                    <p class="text-gray-700 mb-4">
+                        If you have any questions about these Terms of Service, please contact us:
+                    </p>
+                    <div class="grid md:grid-cols-3 gap-4 text-sm">
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-purple-600 mr-2"></i>
+                            <span>support@voteeasy.com</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-phone text-purple-600 mr-2"></i>
+                            <span>+91(123)456789</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-purple-600 mr-2"></i>
+                            <span>123 VoteEasy, Voting city</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Navigation -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-link text-purple-600 mr-2"></i>
+                Related Pages
+            </h3>
+            <div class="flex flex-wrap gap-3">
+                <a href="privacy_policy.html" class="bg-purple-100 text-purple-800 px-4 py-2 rounded-lg hover:bg-purple-200 transition font-medium">
+                    <i class="fas fa-user-shield mr-2"></i>Privacy Policy
+                </a>
+                <a href="about.html" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition font-medium">
+                    <i class="fas fa-info-circle mr-2"></i>About Us
+                </a>
+                <a href="index.html" class="bg-green-100 text-green-800 px-4 py-2 rounded-lg hover:bg-green-200 transition font-medium">
+                    <i class="fas fa-home mr-2"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-vote-yea mr-2"></i> VoteEasy
+                </h3>
+                <p class="text-gray-400">Secure online voting platform for organizations and institutions.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="index.html" class="text-gray-400 hover:text-white transition">Elections</a></li>
+                    <li><a href="result.html" class="text-gray-400 hover:text-white transition">Results</a></li>
+                    <li><a href="about.html" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Legal</h4>
+                <ul class="space-y-2">
+                    <li><a href="privacy_policy.html" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                    <li><a href="tos.html" class="text-gray-400 hover:text-white transition text-purple-300">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Contact Us</h4>
+                <ul class="space-y-2">
+                    <li class="flex items-center">
+                        <i class="fas fa-envelope mr-2 text-gray-400"></i>
+                        <span>support@voteeasy.com</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-phone mr-2 text-gray-400"></i>
+                        <span>+91(123)456789</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                        <span>123 VoteEasy, Voting city</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2025 VoteEasy. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+    
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener("click", function() {
+            mobileMenu.classList.toggle("hidden");
+        });
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Voting System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .vote-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        /* Login state management */
+        .user-logged-out .user-section {
+            display: none !important;
+        }
+        .user-logged-in .login-section {
+            display: none !important;
+        }
+        .candidate-selected {
+            border-color: #7c3aed !important;
+            background-color: #f3f4f6;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #d1d5db;
+        }
+        .login-section, .user-section {
+            display: flex;
+            align-items: center;
+        }
+        .login-section button, .user-section button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans user-logged-out">
+    <canvas id="confetti-canvas" class="hidden"></canvas>
+
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-vote-yea text-2xl"></i>
+                    <h1 class="text-2xl font-bold">VoteEasy</h1>
+                </div>
+                <nav class="flex space-x-6">
+                    <a href="about.html" class="hover:text-purple-200 transition">About</a>
+                    <a href="backend/admin_dashboard.php" class="hover:text-purple-200 transition font-semibold">Admin</a>
+                </nav>
+
+                <div class="flex items-center space-x-4">
+                    <div class="login-section">
+                        <button id="login-btn" class="bg-white text-purple-600 px-4 py-2 rounded-full font-medium hover:bg-purple-100 transition">Login</button>
+                    </div>
+                    <div class="user-section flex items-center space-x-4">
+                        <span class="text-purple-100">Welcome, <span id="user-email"></span></span>
+                        <button id="logout-btn" class="bg-purple-800 text-white px-4 py-2 rounded-full font-medium hover:bg-purple-900 transition">Logout</button>
+                    </div>
+                    <button class="md:hidden text-2xl" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-purple-800 px-4 py-2">
+            <a href="#" class="block py-2 hover:text-purple-200 transition">Home</a>
+           
+            <a href="backend/admin_dashboard.php" class="block py-2 hover:text-purple-200 transition font-semibold">Admin</a>
+        </div>
+    </header>
+
+    <!-- Aadhaar Authentication Modal -->
+    <div id="aadhaar-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div class="flex justify-between items-center border-b px-6 py-4">
+                <h3 class="text-xl font-bold">Aadhaar Authentication</h3>
+                <button id="close-aadhaar-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6">
+                <!-- Step 1: Aadhaar, Mobile, and Email Input -->
+                <div id="aadhaar-input-step">
+                    <form id="aadhaar-form">
+                        <div class="mb-4">
+                            <label for="aadhaar-number" class="block text-gray-700 mb-2">Aadhaar Number</label>
+                            <input type="text" id="aadhaar-number" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter 12-digit Aadhaar number" required maxlength="12" pattern="\d{12}">
+                            <p class="text-sm text-gray-500 mt-1">Enter your 12-digit Aadhaar number for secure authentication</p>
+                        </div>
+                        <div class="mb-4">
+                            <label for="mobile-number" class="block text-gray-700 mb-2">Mobile Number</label>
+                            <input type="text" id="mobile-number" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter 10-digit mobile number" maxlength="10" pattern="\d{10}">
+                            <p class="text-sm text-gray-500 mt-1">Enter your registered mobile number for OTP verification (optional)</p>
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="block text-gray-700 mb-2">Gmail Address</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter your Gmail address" pattern=".+@gmail\.com$">
+                            <p class="text-sm text-gray-500 mt-1">Enter your Gmail address for email OTP verification (optional)</p>
+                        </div>
+                        <button type="submit" class="w-full gradient-bg text-white py-2 px-4 rounded-lg hover:opacity-90 transition font-medium">
+                            Send OTP
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Step 2: OTP Verification -->
+                <div id="otp-verification-step" class="hidden">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-sms text-purple-600 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-gray-800 mb-2">OTP Verification</h4>
+                        <p class="text-gray-600 text-sm">Enter the OTP sent to your registered mobile/email</p>
+
+                    </div>
+                    <form id="otp-form">
+                        <div class="mb-4">
+                            <label for="otp-input" class="block text-gray-700 mb-2">Enter OTP</label>
+                            <input type="text" id="otp-input" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Enter 6-digit OTP" required maxlength="6" pattern="\d{6}">
+                        </div>
+                        <div class="flex space-x-4">
+                            <button type="button" id="resend-otp" class="flex-1 border border-purple-600 text-purple-600 py-2 px-4 rounded-lg hover:bg-purple-50 transition font-medium">
+                                Resend OTP
+                            </button>
+                            <button type="submit" class="flex-1 gradient-bg text-white py-2 px-4 rounded-lg hover:opacity-90 transition font-medium">
+                                Verify OTP
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Loading State -->
+                <div id="aadhaar-loading" class="text-center py-8 hidden">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+                    <p class="text-gray-600">Processing...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white rounded-xl p-8 mb-10 shadow-lg">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Make Your Voice Heard</h2>
+                <p class="text-lg md:text-xl mb-6">Participate in our secure online voting system. Your vote matters in shaping the future.</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="howitworks.html"> <button  class="border-2 border-white text-white px-6 py-3 rounded-full font-medium hover:bg-white hover:text-purple-600 transition">
+                        How It Works
+                    </button> </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Stats Section -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">System Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center justify-center place-items-center">
+                    <div class="text-3xl font-bold text-purple-600 mb-2" id="total-polls">0</div>
+                    <div class="text-gray-600">Active Polls</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center justify-center place-items-center">
+                    <div class="text-3xl font-bold text-green-600 mb-2" id="total-participants">0</div>
+                    <div class="text-gray-600">Total Participants</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center justify-center place-items-center">
+                    <div class="text-3xl font-bold text-orange-600 mb-2" id="total-votes">0</div>
+                    <div class="text-gray-600">Total Votes</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Active Elections Section -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Active Elections</h2>
+                <div class="flex items-center space-x-2">
+                    <button onclick="loadElections()" class="text-purple-600 hover:text-purple-800 flex items-center">
+                        <i class="fas fa-sync-alt mr-1"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div id="elections-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="text-center py-8">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+                    <p class="text-gray-600">Loading elections...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Election Results Section -->
+        <section class="mb-12">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Election Results</h2>
+                <div class="flex items-center space-x-2">
+                    <button onclick="loadElectionResults()" class="text-green-600 hover:text-green-800 flex items-center">
+                        <i class="fas fa-sync-alt mr-1"></i> Refresh Results
+                    </button>
+                    <select id="results-poll-filter" onchange="loadElectionResults()" class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                        <option value="">All Polls</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="text-center py-8">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+                    <p class="text-gray-600">Loading results...</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="md:flex gap-8 mt-8 mb-16">
+            <!-- Left Gradient Info Box -->
+            <div class="md:w-1/3">
+                <div class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white rounded-2xl p-6 shadow-lg">
+                    <h3 id="left-poll-title" class="text-xl font-bold mb-2">Please select a poll to vote</h3>
+                    <p class="text-sm text-purple-100 mb-4">Why choose us for hosting elections and poll?</p>
+
+                    <ul class="space-y-3 mb-6">
+                        <li class="flex items-center"><i class="fas fa-user-check mr-2"></i> Verified voters only</li>
+                        <li class="flex items-center"><i class="fas fa-lock mr-2"></i> Secure voting system</li>
+                        <li class="flex items-center"><i class="fas fa-shield-alt mr-2"></i> Anonymous voting</li>
+                    </ul>
+
+                    <div class="bg-purple-700 bg-opacity-50 rounded-lg p-4">
+                        <h4 class="font-bold mb-2">Voting Instructions</h4>
+                        <ol class="list-decimal list-inside text-sm text-purple-100 space-y-1">
+                            <li>Log in to your account</li>
+                            <li>Select your preferred candidate</li>
+                            <li>Review your selection</li>
+                            <li>Submit your vote</li>
+                            <li>You'll receive a confirmation</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Voting Interface -->
+            <div class="md:w-2/3 p-8">
+                <!-- Login Required -->
+                <div id="login-required" class="text-center py-12">
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-lock text-purple-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Select an Election to View Candidates</h3>
+                    <p class="text-gray-600 mb-6">Choose an active election from the list above to see candidates and vote.</p>
+                </div>
+
+                <!-- Voting Interface (shown when poll selected) -->
+                <div id="voting-interface" class="hidden">
+                    <h3 id="poll-title" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                    <p id="poll-dates" class="text-sm text-gray-600 mb-4"></p>
+
+                    <!-- Poll Information -->
+                    <div id="poll-info" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-info-circle text-blue-600 mt-1 mr-3"></i>
+                            <div>
+                                <h4 class="font-bold text-blue-800 mb-2">Poll Information</h4>
+                                <div id="poll-participants-count" class="text-sm text-blue-700 mb-1">Loading participants...</div>
+                                <div id="poll-vote-count" class="text-sm text-blue-700">Loading vote count...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Login Required Message for Poll -->
+                    <div id="poll-login-required" class="text-center py-12 user-logged-out">
+                        <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-lock text-yellow-600 text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Login Required to Vote</h3>
+                        <p class="text-gray-600 mb-6">Please log in to your account to participate in this election.</p>
+                        <button id="vote-login-btn" class="gradient-bg text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition">
+                            Login to Vote
+                        </button>
+                    </div>
+
+                    <!-- Candidates (shown when logged in) -->
+                    <div id="candidates-section" class="user-logged-in mt-6">
+                        <div id="candidates-loading" class="text-center py-8">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+                            <p class="text-gray-600">Loading candidates...</p>
+                        </div>
+                        <div id="candidates-container" class="space-y-6 hidden"></div>
+
+                        <!-- Selected Candidate -->
+                        <div id="selected-candidate" class="mt-8 p-4 border border-purple-200 bg-purple-50 rounded-lg hidden">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h4 class="font-bold text-purple-800">You have selected:</h4>
+                                    <p id="selected-candidate-name" class="text-lg font-medium"></p>
+                                </div>
+                                <div>
+                                    <button id="change-selection" class="text-purple-600 hover:text-purple-800 mr-4">Change</button>
+                                    <button id="submit-vote" class="gradient-bg text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition">Submit Vote</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Already Voted -->
+                        <div id="already-voted" class="text-center py-12 hidden">
+                            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-check-circle text-green-500 text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">You Have Already Voted</h3>
+                            <p class="text-gray-600 mb-6">Thank you for participating. Your vote has been recorded.</p>
+                            <p class="text-sm text-gray-500">You voted for: <span id="voted-candidate" class="font-medium"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vote Confirmation Modal -->
+        <div id="vote-confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-8 text-center">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check text-green-500 text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Vote Submitted Successfully!</h3>
+                <p class="text-gray-600 mb-6">Thank you for participating in the election. Your vote has been recorded securely.</p>
+                <button id="close-confirmation-modal" class="gradient-bg text-white px-6 py-2 rounded-lg font-medium hover:opacity-90 transition">
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <!-- Login Required Modal -->
+        <div id="login-required-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-8 text-center">
+                <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-exclamation-triangle text-yellow-500 text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Login Required</h3>
+                <p class="text-gray-600 mb-6">You must log in before you can vote in this election.</p>
+                <button id="close-login-required-modal" class="gradient-bg text-white px-6 py-2 rounded-lg font-medium hover:opacity-90 transition">
+                    OK
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-vote-yea mr-2"></i> VoteEasy
+                    </h3>
+                    <p class="text-gray-400">Secure online voting platform for organizations and institutions.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Elections</a></li>
+                        <li><a href="result.html" class="text-gray-400 hover:text-white transition">Results</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="privacy_policy.html" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="tos.html" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2 text-gray-400"></i>
+                            <span>support@voteeasy.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone mr-2 text-gray-400"></i>
+                            <span>+1 (555) 123-4567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                            <span>123 Voting St, Democracy City</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 VoteEasy. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global state
+        let userState = {
+            isLoggedIn: false,
+            username: '',
+            userId: null,
+            hasVoted: false,
+            votedCandidate: '',
+            selectedPollId: null,
+            selectedCandidateId: null,
+            selectedCandidateName: ''
+        };
+
+        // Utility functions (same as admin dashboard)
+            async function apiCall(url, options = {}) {
+            try {
+                const response = await fetch(`backend/${url}`, { credentials: 'include', ...options });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('API call failed:', error);
+                throw error;
+            }
+        }
+
+        // Initialize everything when DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
+            initializeEventListeners();
+            checkLoginState();
+            loadSystemStats();
+            loadElections();
+            loadElectionResults();
+        });
+
+
+
+        // ================= SESSION CHECK =================
+        async function checkLoginState() {
+            console.log('Checking login state...');
+            try {
+                let res = await fetch('backend/me.php', { credentials: 'include' });
+                let data = await res.json();
+                console.log('Session check response:', data);
+                console.log('Session cookies present:', document.cookie);
+
+                if (data.success) {
+                    userState.isLoggedIn = true;
+                    userState.username = data.username;
+                    userState.userId = parseInt(data.id);
+                    userState.role = data.role;
+
+                    console.log('User session found:', userState);
+                    updateUIAfterLogin();
+                } else {
+                    console.log('No active session');
+                    updateUIAfterLogout();
+                }
+            } catch (err) {
+                console.error("Session check error:", err);
+                updateUIAfterLogout();
+            }
+        }
+
+        // ================= LOAD ELECTIONS =================
+        async function loadElections() {
+            const electionsContainer = document.getElementById("elections-container");
+            
+            try {
+                const polls = await apiCall("poll.php?action=list");
+
+                electionsContainer.innerHTML = "";
+
+                if (polls.length === 0) {
+                    electionsContainer.innerHTML = `
+                        <div class="col-span-full text-center py-12">
+                            <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-ballot-check text-gray-400 text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-700 mb-4">No Active Elections</h3>
+                            <p class="text-gray-500">There are no active elections at the moment. Please check back later.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                polls.forEach(poll => {
+                    electionsContainer.insertAdjacentHTML("beforeend", `
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all duration-300 card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-bold text-lg text-gray-800">${poll.title}</h3>
+                                <div class="text-sm text-green-600 bg-green-100 px-2 py-1 rounded-full">
+                                    <i class="fas fa-circle text-xs mr-1"></i>Active
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-2 mb-4">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-calendar-alt mr-2"></i>
+                                    ${poll.start_date || 'No date'} → ${poll.end_date || 'No end date'}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-users mr-2"></i>
+                                    <span id="poll-participants-${poll.id}">Loading...</span> participants
+                                </div>
+                            </div>
+                            
+                            <button onclick="handleViewAndVote(${poll.id}, '${poll.title || 'Poll'}', '${poll.start_date || ''}', '${poll.end_date || ''}')" 
+                                class="w-full gradient-bg text-white px-4 py-2 rounded-lg hover:opacity-90 transition font-medium">
+                                View & Vote
+                            </button>
+                        </div>
+                    `);
+                    
+                    // Load participant count for this poll
+                    loadPollParticipantCount(poll.id);
+                });
+            } catch (error) {
+                console.error('Failed to load elections:', error);
+                electionsContainer.innerHTML = '<p class="text-red-500 text-center col-span-3">Failed to load elections. Please try again later.</p>';
+            }
+        }
+
+        // ================= LOAD POLL PARTICIPANT COUNT =================
+        async function loadPollParticipantCount(pollId) {
+            try {
+                const participants = await apiCall(`participants.php?action=list&poll_id=${pollId}`);
+                const participantElement = document.getElementById(`poll-participants-${pollId}`);
+                if (participantElement) {
+                    participantElement.textContent = participants.length;
+                }
+            } catch (error) {
+                const participantElement = document.getElementById(`poll-participants-${pollId}`);
+                if (participantElement) {
+                    participantElement.textContent = '0';
+                }
+            }
+        }
+
+        // ================= LOAD ELECTION RESULTS =================
+        async function loadElectionResults() {
+            console.log('Loading election results...');
+            const resultsContainer = document.getElementById('results-container');
+            const pollFilter = document.getElementById('results-poll-filter');
+            
+            try {
+                const response = await apiCall('results.php?action=completed');
+                const polls = response || [];
+
+                // Update dropdown
+                pollFilter.innerHTML = '<option value="">All Polls</option>';
+                polls.forEach(poll => {
+                    pollFilter.innerHTML += `<option value="${poll.id}">${poll.title}</option>`;
+                });
+
+                // Filter
+                const selectedPollId = pollFilter.value;
+                const pollsToShow = selectedPollId ? polls.filter(p => p.id == selectedPollId) : polls;
+
+                if (pollsToShow.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div class="col-span-full text-center py-12">
+                            <i class="fas fa-chart-bar text-gray-400 text-3xl mb-4"></i>
+                            <h3 class="text-xl font-bold text-gray-700">No Results Available</h3>
+                        </div>`;
+                    return;
+                }
+
+                resultsContainer.innerHTML = pollsToShow.map(poll => {
+                    const candidateRows = poll.options.map((opt, idx) => {
+                        const percentage = poll.total_votes > 0 
+                            ? Math.round((opt.votes / poll.total_votes) * 100) : 0;
+                        return `
+                            <div class="flex items-center justify-between p-3 border rounded-lg ${idx===0?'bg-green-50':'bg-gray-50'}">
+                                <div>
+                                    <h4 class="font-bold">${opt.option_text}</h4>
+                                    <p class="text-sm text-gray-600">${opt.votes} votes (${percentage}%)</p>
+                                </div>
+                                <div class="w-24 bg-gray-200 rounded-full h-3">
+                                    <div class="bg-gradient-to-r ${idx===0?'from-green-400 to-green-600':'from-purple-400 to-purple-600'} h-3 rounded-full" style="width:${percentage}%"></div>
+                                </div>
+                            </div>`;
+                    }).join('');
+
+                    return `
+                        <div class="bg-white rounded-lg shadow-md p-4 border">
+                            <h3 class="font-bold text-lg mb-2">${poll.title}</h3>
+                            <p class="text-sm text-gray-500 mb-4">${poll.start_date} → ${poll.end_date}</p>
+                            <div class="space-y-2">${candidateRows}</div>
+                            <div class="mt-4 text-right text-sm text-gray-500">Total Votes: ${poll.total_votes}</div>
+                        </div>`;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading election results:', error);
+                resultsContainer.innerHTML = `<p class="col-span-full text-red-500 text-center">Failed to load results.</p>`;
+            }
+        }
+
+        // ================= VIEW AND VOTE HANDLER =================
+        async function handleViewAndVote(pollId, title, start, end) {
+            console.log('handleViewAndVote called:', pollId, title);
+            
+            // Update the selected poll
+            userState.selectedPollId = pollId;
+            
+            // Show the voting interface
+            document.getElementById("voting-interface").classList.remove("hidden");
+            document.getElementById("login-required").classList.add("hidden");
+            
+            // Update poll details
+            document.getElementById("poll-title").textContent = title;
+            document.getElementById("poll-dates").textContent = `${start} → ${end}`;
+            document.getElementById("left-poll-title").textContent = title;
+            
+            // Check login state and show appropriate content
+            if (!userState.isLoggedIn) {
+                // User not logged in - show login required message
+                document.getElementById("poll-login-required").classList.remove("hidden");
+                document.getElementById("candidates-section").classList.add("hidden");
+                return;
+            }
+            
+            // User is logged in - check if they already voted
+            try {
+                await checkIfAlreadyVoted(pollId);
+                await loadPollCandidates(pollId);
+            } catch (error) {
+                console.error('Error loading poll data:', error);
+                alert('Error loading poll data. Please try again.');
+            }
+        }
+
+        // ================= CHECK IF USER ALREADY VOTED =================
+        async function checkIfAlreadyVoted(pollId) {
+            try {
+                const data = await apiCall('check_vote.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        user_id: userState.userId,
+                        poll_id: pollId 
+                    })
+                });
+                
+                if (data.hasVoted) {
+                    userState.hasVoted = true;
+                    userState.votedCandidate = data.votedCandidate;
+                    
+                    // Show already voted message
+                    document.getElementById("already-voted").classList.remove("hidden");
+                    document.getElementById("candidates-container").style.display = "none";
+                    document.getElementById("voted-candidate").textContent = data.votedCandidate;
+                } else {
+                    userState.hasVoted = false;
+                    document.getElementById("already-voted").classList.add("hidden");
+                    document.getElementById("candidates-container").style.display = "block";
+                }
+            } catch (error) {
+                console.error('Error checking vote status:', error);
+                // If there's an error, assume they haven't voted yet
+                userState.hasVoted = false;
+                document.getElementById("already-voted").classList.add("hidden");
+                document.getElementById("candidates-container").style.display = "block";
+            }
+        }
+
+        // ================= LOAD POLL CANDIDATES =================
+        async function loadPollCandidates(pollId) {
+            try {
+                const participants = await apiCall(`participants.php?action=list&poll_id=${pollId}`);
+
+                const container = document.getElementById("candidates-container");
+                container.innerHTML = "";
+
+                // Update poll info
+                document.getElementById("poll-participants-count").textContent = `${participants.length} candidates registered`;
+                document.getElementById("poll-vote-count").textContent = "Vote counting in progress...";
+
+                if (participants.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-center">No candidates available for this poll.</p>';
+                    return;
+                }
+
+                participants.forEach(participant => {
+                    const initials = participant.name.split(" ").map(n => n[0]).join("").toUpperCase();
+                    container.insertAdjacentHTML("beforeend", `
+                        <div class="border border-gray-200 rounded-lg p-4 flex justify-between items-center hover:border-purple-300 transition candidate-card" data-candidate-id="${participant.id}">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold mr-4">
+                                    ${initials}
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">${participant.name}</h4>
+                                    <p class="text-gray-600 text-sm">Candidate</p>
+                                </div>
+                            </div>
+                            <button class="vote-btn bg-purple-100 text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-200 transition"
+                                data-candidate-id="${participant.id}" data-candidate-name="${participant.name}">
+                                Select
+                            </button>
+                        </div>
+                    `);
+                });
+
+                // Hide loading and show candidates
+                document.getElementById("candidates-loading").classList.add("hidden");
+                document.getElementById("candidates-container").classList.remove("hidden");
+                document.getElementById("poll-login-required").classList.add("hidden");
+                document.getElementById("candidates-section").classList.remove("hidden");
+                
+            } catch (error) {
+                console.error('Error loading candidates:', error);
+                document.getElementById("candidates-container").innerHTML = '<p class="text-red-500 text-center">Error loading candidates. Please try again.</p>';
+            }
+        }
+
+        // ================= AADHAAR AUTHENTICATION FUNCTIONS =================
+        let currentAadhaarNumber = '';
+        let generatedOtp = '';
+
+        function resetAadhaarForm() {
+            document.getElementById('aadhaar-input-step').classList.remove('hidden');
+            document.getElementById('otp-verification-step').classList.add('hidden');
+            document.getElementById('aadhaar-loading').classList.add('hidden');
+            document.getElementById('aadhaar-form').reset();
+            document.getElementById('otp-form').reset();
+            currentAadhaarNumber = '';
+            generatedOtp = '';
+        }
+
+        async function handleAadhaarInitiate(e) {
+            e.preventDefault();
+
+            const aadhaarNumber = document.getElementById('aadhaar-number').value.trim();
+            const mobileNumber = document.getElementById('mobile-number').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            console.log('Initiating Aadhaar with:', { aadhaarNumber, mobileNumber, email });
+
+            if (!aadhaarNumber || aadhaarNumber.length !== 12 || !/^\d{12}$/.test(aadhaarNumber)) {
+                alert('Please enter a valid 12-digit Aadhaar number');
+                return;
+            }
+
+            // Validate that at least one contact method is provided
+            if ((!mobileNumber || mobileNumber.length !== 10 || !/^\d{10}$/.test(mobileNumber)) &&
+                (!email || !email.match(/.+@gmail\.com$/))) {
+                alert('Please provide either a valid 10-digit mobile number or a Gmail address');
+                return;
+            }
+
+            currentAadhaarNumber = aadhaarNumber;
+
+            // Show loading state
+            document.getElementById('aadhaar-input-step').classList.add('hidden');
+            document.getElementById('aadhaar-loading').classList.remove('hidden');
+
+            try {
+                const response = await apiCall('aadhaar_auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'initiate',
+                        aadhaar_number: aadhaarNumber,
+                        mobile_number: mobileNumber,
+                        email: email
+                    })
+                });
+
+                console.log('Aadhaar initiation response:', response);
+
+                if (response.success) {
+                    // Store the generated OTP for demo purposes
+                    generatedOtp = response.otp;
+
+                    // Show OTP verification step
+                    document.getElementById('aadhaar-loading').classList.add('hidden');
+                    document.getElementById('otp-verification-step').classList.remove('hidden');
+
+
+
+                } else {
+                    alert(response.message || 'Failed to initiate Aadhaar verification');
+                    resetAadhaarForm();
+                }
+            } catch (error) {
+                console.error('Aadhaar initiation error:', error);
+                alert('Failed to initiate Aadhaar verification. Please try again.');
+                resetAadhaarForm();
+            }
+        }
+
+        async function handleOtpVerification(e) {
+            e.preventDefault();
+            
+            const otpInput = document.getElementById('otp-input').value.trim();
+            
+            if (!otpInput || otpInput.length !== 6 || !/^\d{6}$/.test(otpInput)) {
+                alert('Please enter a valid 6-digit OTP');
+                return;
+            }
+
+            // Show loading state
+            document.getElementById('otp-verification-step').classList.add('hidden');
+            document.getElementById('aadhaar-loading').classList.remove('hidden');
+
+            try {
+                const response = await apiCall('aadhaar_auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        action: 'verify',
+                        aadhaar_number: currentAadhaarNumber,
+                        otp: otpInput
+                    })
+                });
+
+                if (response.success) {
+                    // Authentication successful
+                    userState.isLoggedIn = true;
+                    userState.username = response.username || 'Aadhaar User';
+                    userState.userId = parseInt(response.user_id);
+                    userState.role = response.role || 'voter';
+                    
+                    console.log('Aadhaar authentication successful:', userState);
+                    
+                    // Close modal and update UI
+                    document.getElementById('aadhaar-modal').classList.add('hidden');
+                    updateUIAfterLogin();
+                    resetAadhaarForm();
+                    
+                    // If user was trying to vote, reload the poll
+                    if (userState.selectedPollId) {
+                        const pollTitle = document.getElementById('poll-title').textContent;
+                        const pollDates = document.getElementById('poll-dates').textContent;
+                        const [start, end] = pollDates.split(' → ');
+                        handleViewAndVote(userState.selectedPollId, pollTitle, start, end);
+                    }
+                } else {
+                    alert(response.message || 'OTP verification failed');
+                    resetAadhaarForm();
+                }
+            } catch (error) {
+                console.error('OTP verification error:', error);
+                alert('Failed to verify OTP. Please try again.');
+                resetAadhaarForm();
+            }
+        }
+
+        async function handleResendOtp() {
+            if (!currentAadhaarNumber) {
+                alert('Please enter your Aadhaar number first');
+                return;
+            }
+
+            // Show loading state
+            document.getElementById('otp-verification-step').classList.add('hidden');
+            document.getElementById('aadhaar-loading').classList.remove('hidden');
+
+            try {
+                const response = await apiCall('aadhaar_auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        action: 'resend',
+                        aadhaar_number: currentAadhaarNumber 
+                    })
+                });
+
+                if (response.success) {
+                    // Update the generated OTP
+                    generatedOtp = response.otp;
+                    
+                    // Show OTP verification step again
+                    document.getElementById('aadhaar-loading').classList.add('hidden');
+                    document.getElementById('otp-verification-step').classList.remove('hidden');
+                    
+                    // Update demo OTP display
+                    document.getElementById('otp-display').textContent = generatedOtp;
+                    document.getElementById('demo-otp').classList.remove('hidden');
+                    
+                    alert('New OTP sent successfully');
+                } else {
+                    alert(response.message || 'Failed to resend OTP');
+                    resetAadhaarForm();
+                }
+            } catch (error) {
+                console.error('Resend OTP error:', error);
+                alert('Failed to resend OTP. Please try again.');
+                resetAadhaarForm();
+            }
+        }
+
+        // ================= EVENT LISTENERS =================
+        function initializeEventListeners() {
+            console.log('Initializing event listeners...');
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    document.getElementById('mobile-menu').classList.toggle('hidden');
+                });
+            }
+
+            // Aadhaar authentication listeners
+            const loginBtn = document.getElementById('login-btn');
+            const voteLoginBtn = document.getElementById('vote-login-btn');
+            const closeAadhaarModal = document.getElementById('close-aadhaar-modal');
+            
+            if (loginBtn) {
+                loginBtn.addEventListener('click', () => {
+                    document.getElementById('aadhaar-modal').classList.remove('hidden');
+                    resetAadhaarForm();
+                });
+            }
+            
+            if (voteLoginBtn) {
+                voteLoginBtn.addEventListener('click', () => {
+                    document.getElementById('aadhaar-modal').classList.remove('hidden');
+                    resetAadhaarForm();
+                });
+            }
+            
+            if (closeAadhaarModal) {
+                closeAadhaarModal.addEventListener('click', () => {
+                    document.getElementById('aadhaar-modal').classList.add('hidden');
+                    resetAadhaarForm();
+                });
+            }
+
+            // Aadhaar form submission
+            const aadhaarForm = document.getElementById('aadhaar-form');
+            if (aadhaarForm) {
+                aadhaarForm.addEventListener('submit', handleAadhaarInitiate);
+            }
+
+            // OTP form submission
+            const otpForm = document.getElementById('otp-form');
+            if (otpForm) {
+                otpForm.addEventListener('submit', handleOtpVerification);
+            }
+
+            // Resend OTP
+            const resendOtpBtn = document.getElementById('resend-otp');
+            if (resendOtpBtn) {
+                resendOtpBtn.addEventListener('click', handleResendOtp);
+            }
+
+            // Close aadhaar modal when clicking outside
+            const aadhaarModal = document.getElementById('aadhaar-modal');
+            if (aadhaarModal) {
+                aadhaarModal.addEventListener('click', (e) => {
+                    if (e.target === aadhaarModal) {
+                        aadhaarModal.classList.add('hidden');
+                        resetAadhaarForm();
+                    }
+                });
+            }
+
+            // Remove old login/register modal listeners since we're using Aadhaar auth
+            const loginModal = document.getElementById('login-modal');
+            const registerModal = document.getElementById('register-modal');
+            if (loginModal) loginModal.classList.add('hidden');
+            if (registerModal) registerModal.classList.add('hidden');
+
+            // Logout handler
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', handleLogout);
+            }
+
+            // Vote selection handler
+            document.addEventListener('click', handleVoteSelection);
+
+            // Vote submission handler
+            const submitVoteBtn = document.getElementById('submit-vote');
+            if (submitVoteBtn) {
+                submitVoteBtn.addEventListener('click', handleVoteSubmission);
+            }
+
+            // Change selection handler
+            const changeSelectionBtn = document.getElementById('change-selection');
+            if (changeSelectionBtn) {
+                changeSelectionBtn.addEventListener('click', () => {
+                    document.getElementById('selected-candidate').classList.add('hidden');
+                    // Remove selected state from all candidates
+                    document.querySelectorAll('.candidate-card').forEach(card => {
+                        card.classList.remove('candidate-selected');
+                    });
+                });
+            }
+
+            // Modal close handlers
+            const closeConfirmationModal = document.getElementById('close-confirmation-modal');
+            if (closeConfirmationModal) {
+                closeConfirmationModal.addEventListener('click', () => {
+                    document.getElementById('vote-confirmation-modal').classList.add('hidden');
+                });
+            }
+
+            const closeLoginRequiredModal = document.getElementById('close-login-required-modal');
+            if (closeLoginRequiredModal) {
+                closeLoginRequiredModal.addEventListener('click', () => {
+                    document.getElementById('login-required-modal').classList.add('hidden');
+                });
+            }
+        }
+
+        // ================= LOGIN HANDLER =================
+        async function handleLogin(e) {
+            e.preventDefault();
+            console.log('Login form submitted');
+            
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (!username || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                const data = await apiCall('login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                console.log('Login response:', data);
+                
+                if (data.success) {
+                    // Store user data properly
+                    userState.isLoggedIn = true;
+                    userState.username = data.username;
+                    userState.userId = parseInt(data.id);
+                    userState.role = data.role;
+                    
+                    console.log('User logged in:', userState);
+                    
+                    updateUIAfterLogin();
+                    document.getElementById('login-modal').classList.add('hidden');
+                    document.getElementById('login-form').reset();
+                    
+                    // If user was trying to vote, reload the poll
+                    if (userState.selectedPollId) {
+                        const pollTitle = document.getElementById('poll-title').textContent;
+                        const pollDates = document.getElementById('poll-dates').textContent;
+                        const [start, end] = pollDates.split(' → ');
+                        handleViewAndVote(userState.selectedPollId, pollTitle, start, end);
+                    }
+                } else {
+                    alert(data.message || 'Invalid username or password.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Login failed. Please check your connection and try again.');
+            }
+        }
+
+        // ================= REGISTER HANDLER =================
+        async function handleRegister(e) {
+            e.preventDefault();
+            console.log('Register form submitted');
+            
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+            const confirmPassword = document.getElementById('reg-confirm-password').value.trim();
+
+            if (!username || !password || !confirmPassword) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long');
+                return;
+            }
+
+            try {
+                const data = await apiCall('register.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                console.log('Register response:', data);
+                
+                if (data.success) {
+                    // Store user data properly after auto-login
+                    userState.isLoggedIn = true;
+                    userState.username = data.username;
+                    userState.userId = parseInt(data.id);
+                    userState.role = data.role;
+                    
+                    console.log('User registered and logged in:', userState);
+                    
+                    updateUIAfterLogin();
+                    document.getElementById('register-modal').classList.add('hidden');
+                    document.getElementById('register-form').reset();
+                    
+                    // If user was trying to vote, reload the poll
+                    if (userState.selectedPollId) {
+                        const pollTitle = document.getElementById('poll-title').textContent;
+                        const pollDates = document.getElementById('poll-dates').textContent;
+                        const [start, end] = pollDates.split(' → ');
+                        handleViewAndVote(userState.selectedPollId, pollTitle, start, end);
+                    }
+                } else {
+                    alert(data.message || 'Registration failed.');
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                alert('Registration failed. Please check your connection and try again.');
+            }
+        }
+
+        // ================= SYSTEM STATS =================
+        async function loadSystemStats() {
+            try {
+                // Call backend APIs in parallel
+                const [polls, votes, participants] = await Promise.all([
+                    apiCall('poll.php?action=list'),
+                    apiCall('votes.php?action=count'),
+                    apiCall('participants.php?action=count')
+                ]);
+
+                // Update DOM
+                document.getElementById('total-polls').textContent = polls.length || 0;
+                document.getElementById('total-votes').textContent = votes.total || 0;
+                document.getElementById('total-participants').textContent = participants.total || 0;
+
+            } catch (error) {
+                console.error('Failed to load system stats:', error);
+
+                // fallback values
+                document.getElementById('total-polls').textContent = '0';
+                document.getElementById('total-votes').textContent = '0';
+                document.getElementById('total-participants').textContent = '0';
+            }
+        }
+
+        // ================= LOGOUT HANDLER =================
+        async function handleLogout() {
+            try {
+                await apiCall('logout.php', { method: 'POST' });
+                
+                // Reset user state
+                userState = {
+                    isLoggedIn: false,
+                    username: '',
+                    userId: null,
+                    hasVoted: false,
+                    votedCandidate: '',
+                    selectedPollId: null,
+                    selectedCandidateId: null,
+                    selectedCandidateName: ''
+                };
+                
+                updateUIAfterLogout();
+                
+                // Reset voting interface
+                document.getElementById('voting-interface').classList.add('hidden');
+                document.getElementById('login-required').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Logout error:', error);
+                // Force logout on client side even if server request fails
+                userState.isLoggedIn = false;
+                updateUIAfterLogout();
+            }
+        }
+
+        // ================= VOTE SELECTION HANDLER =================
+        function handleVoteSelection(e) {
+            if (e.target.classList.contains("vote-btn")) {
+                if (userState.hasVoted) {
+                    alert('You have already voted in this election.');
+                    return;
+                }
+
+                const candidateId = e.target.getAttribute("data-candidate-id");
+                const candidateName = e.target.getAttribute("data-candidate-name");
+
+                // Remove previous selection
+                document.querySelectorAll('.candidate-card').forEach(card => {
+                    card.classList.remove('candidate-selected');
+                });
+
+                // Highlight selected candidate
+                e.target.closest('.candidate-card').classList.add('candidate-selected');
+
+                // Show selected candidate details
+                document.getElementById("selected-candidate-name").textContent = candidateName;
+                document.getElementById("selected-candidate").classList.remove("hidden");
+
+                // Store selection
+                userState.selectedCandidateId = candidateId;
+                userState.selectedCandidateName = candidateName;
+            }
+        }
+
+        // ================= VOTE SUBMISSION HANDLER =================
+        async function handleVoteSubmission() {
+            console.log('Vote submission started');
+            console.log('User state:', userState);
+            
+            if (!userState.selectedCandidateId || !userState.selectedPollId) {
+                alert('Please select a candidate first.');
+                return;
+            }
+
+            if (!userState.isLoggedIn || !userState.userId) {
+                console.log('User not logged in or missing user ID');
+                document.getElementById('login-required-modal').classList.remove('hidden');
+                return;
+            }
+
+            if (userState.hasVoted) {
+                alert('You have already voted in this election.');
+                return;
+            }
+
+            try {
+                const voteData = {
+                    user_id: userState.userId,
+                    participant_id: parseInt(userState.selectedCandidateId),
+                    poll_id: parseInt(userState.selectedPollId)
+                };
+                
+                console.log('Sending vote data:', voteData);
+
+                const data = await apiCall('submit_vote.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(voteData)
+                });
+
+                console.log('Vote submission response:', data);
+
+                if (data.success) {
+                    // Update user state
+                    userState.hasVoted = true;
+                    userState.votedCandidate = userState.selectedCandidateName;
+
+                // Show success modal
+                document.getElementById('vote-confirmation-modal').classList.remove('hidden');
+
+                // Hide voting interface and show already voted message
+                document.getElementById('candidates-container').style.display = 'none';
+                document.getElementById('selected-candidate').classList.add('hidden');
+                document.getElementById('already-voted').classList.remove('hidden');
+                document.getElementById('voted-candidate').textContent = userState.votedCandidate;
+
+                // Scroll to top to make modal visible
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                    // Reload poll data to update UI immediately
+                    const pollTitle = document.getElementById('poll-title').textContent;
+                    const pollDates = document.getElementById('poll-dates').textContent;
+                    const [start, end] = pollDates.split(' → ');
+                    await handleViewAndVote(userState.selectedPollId, pollTitle, start, end);
+
+                } else {
+                    console.error('Vote submission failed:', data.message);
+                    alert(data.message || 'Failed to submit vote. Please try again.');
+                }
+            } catch (error) {
+                console.error('Vote submission error:', error);
+                alert('Failed to submit vote. Please check your connection and try again.');
+            }
+        }
+
+        // ================= UI UPDATE FUNCTIONS =================
+        function updateUIAfterLogin() {
+            console.log('Updating UI after login for:', userState.username);
+            document.body.classList.remove('user-logged-out');
+            document.body.classList.add('user-logged-in');
+            const userEmailElement = document.getElementById('user-email');
+            if (userEmailElement) {
+                userEmailElement.textContent = userState.username;
+            }
+        }
+
+        function updateUIAfterLogout() {
+            console.log('Updating UI after logout');
+            document.body.classList.remove('user-logged-in');
+            document.body.classList.add('user-logged-out');
+        }
+
+        // ================= EXPORT POLL RESULTS =================
+        function exportPollResults(pollId, pollTitle) {
+            // This would export the results for a specific poll
+            alert(`Export functionality for "${pollTitle}" would be implemented here. In a real system, this would download a CSV or PDF with the poll results.`);
+        }
+
+        // Make functions globally accessible
+        window.handleViewAndVote = handleViewAndVote;
+        window.loadElections = loadElections;
+        window.loadElectionResults = loadElectionResults;
+        window.exportPollResults = exportPollResults;
+
+    </script>
+
+</body>
+</html>

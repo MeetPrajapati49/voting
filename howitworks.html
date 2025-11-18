@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works - VoteEasy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+        .vote-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .user-logged-out .user-section { display: none !important; }
+        .user-logged-in .login-section { display: none !important; }
+        .step-number {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+        .process-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .process-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .process-card:hover::before {
+            opacity: 1;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 80px;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(to bottom, #3b82f6, #e5e7eb);
+            transform: translateX(-50%);
+        }
+        .timeline-container {
+            position: relative;
+        }
+        .timeline-container:last-child .timeline-line {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans user-logged-out">
+
+<!-- Header -->
+<header class="gradient-bg text-white shadow-lg">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-vote-yea text-2xl"></i>
+                <h1 class="text-2xl font-bold">VoteEasy</h1>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="about.html" class="hover:text-blue-200 transition">About</a>
+                <a href="admin_dashboard.php" class="hover:text-yellow-300 font-semibold">Admin</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <div class="login-section">
+                    <button id="login-btn" class="bg-white text-blue-600 px-4 py-2 rounded-full font-medium hover:bg-blue-100 transition">
+                        Login
+                    </button>
+                </div>
+                <div class="user-section flex items-center space-x-4">
+                    <span class="text-blue-100">Welcome, <span id="user-email"></span></span>
+                    <button id="logout-btn" class="bg-blue-800 text-white px-4 py-2 rounded-full font-medium hover:bg-blue-900 transition">Logout</button>
+                </div>
+                <button class="md:hidden text-2xl" id="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile menu -->
+<div id="mobile-menu" class="hidden md:hidden bg-blue-800 px-4 py-2">
+    <a href="index.html" class="block py-2 hover:text-blue-200 transition">Home</a>
+    <a href="poll.html" class="block py-2 hover:text-blue-200 transition">Elections</a>
+    <a href="result.html" class="block py-2 hover:text-blue-200 transition">Results</a>
+    <a href="about.html" class="block py-2 hover:text-blue-200 transition">About</a>
+    <a href="admin_dashboard.php" class="block py-2 text-yellow-300 font-semibold">Admin</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="container mx-auto px-4 py-8">
+    <!-- Page Header -->
+    <section class="gradient-bg text-white rounded-xl p-8 mb-10 shadow-lg">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="flex items-center justify-center mb-4">
+                <i class="fas fa-cogs text-4xl mr-4"></i>
+                <h1 class="text-3xl md:text-4xl font-bold">How It Works</h1>
+            </div>
+            <p class="text-lg md:text-xl">Simple, secure, and transparent online voting in 6 easy steps</p>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <div class="max-w-4xl mx-auto mb-12">
+        <div class="bg-white rounded-xl shadow-md p-8 mb-8">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center justify-center">
+                    <i class="fas fa-lightbulb text-blue-600 mr-3"></i>
+                    Why Choose VoteEasy?
+                </h2>
+                <p class="text-gray-700 leading-relaxed max-w-3xl mx-auto">
+                    VoteEasy streamlines the voting process with cutting-edge security, user-friendly design, and complete transparency. 
+                    Our platform ensures every vote counts while maintaining the highest standards of election integrity.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="text-center p-6 bg-blue-50 rounded-lg">
+                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-blue-800 mb-2">Secure</h3>
+                    <p class="text-gray-600 text-sm">End-to-end encryption and blockchain verification</p>
+                </div>
+                <div class="text-center p-6 bg-green-50 rounded-lg">
+                    <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-green-800 mb-2">Accessible</h3>
+                    <p class="text-gray-600 text-sm">Vote from anywhere with internet connection</p>
+                </div>
+                <div class="text-center p-6 bg-purple-50 rounded-lg">
+                    <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-eye text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-purple-800 mb-2">Transparent</h3>
+                    <p class="text-gray-600 text-sm">Real-time results and audit trails</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step-by-Step Process -->
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">The Voting Process</h2>
+            <p class="text-gray-600">Follow these simple steps to cast your vote securely</p>
+        </div>
+
+        <div class="space-y-8">
+            <!-- Step 1 -->
+            <div class="timeline-container">
+                <div class="bg-white rounded-xl shadow-md p-8 process-card card-hover transition-all duration-300">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/4 mb-6 md:mb-0">
+                            <div class="step-number">1</div>
+                            <h3 class="text-xl font-bold text-center text-blue-800">Account Creation</h3>
+                        </div>
+                        <div class="md:w-3/4 md:pl-8">
+                            <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
+                                <h4 class="font-bold text-blue-800 mb-3 flex items-center">
+                                    <i class="fas fa-user-plus mr-2"></i>
+                                    Register Your Account
+                                </h4>
+                                <p class="text-gray-700 mb-4">
+                                    Create a secure account using your email address and set up a strong password. You'll need to verify your identity and eligibility to vote.
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
+                                    <li>Provide valid email address</li>
+                                    <li>Create strong password (8+ characters)</li>
+                                    <li>Verify email through confirmation link</li>
+                                    <li>Complete identity verification process</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-line"></div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="timeline-container">
+                <div class="bg-white rounded-xl shadow-md p-8 process-card card-hover transition-all duration-300">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/4 mb-6 md:mb-0">
+                            <div class="step-number">2</div>
+                            <h3 class="text-xl font-bold text-center text-blue-800">Login & Authentication</h3>
+                        </div>
+                        <div class="md:w-3/4 md:pl-8">
+                            <div class="bg-green-50 border-l-4 border-green-600 p-6 rounded-r-lg">
+                                <h4 class="font-bold text-green-800 mb-3 flex items-center">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>
+                                    Secure Login Process
+                                </h4>
+                                <p class="text-gray-700 mb-4">
+                                    Access your account using multi-factor authentication to ensure maximum security. Your identity is verified before granting access to voting.
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
+                                    <li>Enter email and password</li>
+                                    <li>Complete two-factor authentication (2FA)</li>
+                                    <li>Biometric verification (optional)</li>
+                                    <li>Access granted to eligible elections</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-line"></div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="timeline-container">
+                <div class="bg-white rounded-xl shadow-md p-8 process-card card-hover transition-all duration-300">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/4 mb-6 md:mb-0">
+                            <div class="step-number">3</div>
+                            <h3 class="text-xl font-bold text-center text-blue-800">Browse Elections</h3>
+                        </div>
+                        <div class="md:w-3/4 md:pl-8">
+                            <div class="bg-purple-50 border-l-4 border-purple-600 p-6 rounded-r-lg">
+                                <h4 class="font-bold text-purple-800 mb-3 flex items-center">
+                                    <i class="fas fa-list mr-2"></i>
+                                    View Available Elections
+                                </h4>
+                                <p class="text-gray-700 mb-4">
+                                    Browse through all active elections you're eligible to participate in. Each election displays detailed information about candidates and voting deadlines.
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
+                                    <li>View election titles and descriptions</li>
+                                    <li>Check voting start and end dates</li>
+                                    <li>See candidate profiles and manifestos</li>
+                                    <li>Review your voting eligibility status</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-line"></div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="timeline-container">
+                <div class="bg-white rounded-xl shadow-md p-8 process-card card-hover transition-all duration-300">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/4 mb-6 md:mb-0">
+                            <div class="step-number">4</div>
+                            <h3 class="text-xl font-bold text-center text-blue-800">Review Candidates</h3>
+                        </div>
+                        <div class="md:w-3/4 md:pl-8">
+                            <div class="bg-orange-50 border-l-4 border-orange-600 p-6 rounded-r-lg">
+                                <h4 class="font-bold text-orange-800 mb-3 flex items-center">
+                                    <i class="fas fa-search mr-2"></i>
+                                    Research Your Options
+                                </h4>
+                                <p class="text-gray-700 mb-4">
+                                    Make informed decisions by reviewing detailed candidate information, their policies, background, and qualifications before casting your vote.
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
+                                    <li>Read candidate biographies and credentials</li>
+                                    <li>Review policy positions and manifestos</li>
+                                    <li>View candidate photos and contact information</li>
+                                    <li>Access additional campaign materials</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-line"></div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="timeline-container">
+                <div class="bg-white rounded-xl shadow-md p-8 process-card card-hover transition-all duration-300">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/4 mb-6 md:mb-0">
+                            <div class="step-number">5</div>
+                            <h3 class="text-xl font-bold text-center text-blue-800">Cast Your Vote</h3>
+                        </div>
+                        <div class="md:w-3/4 md:pl-8">
+                            <div class="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-lg">
+                                <h4 class="font-bold text-red-800 mb-3 flex items-center">
+                                    <i class="fas fa-vote-yea mr-2"></i>
+                                    Secure Voting Process
+                                </h4>
+                                <p class="text-gray-700 mb-4">
+                                    Select your preferred candidate and submit your vote. The system uses advanced encryption to ensure your vote is secure and anonymous.
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
+                                    <li>Select your preferred candidate</li>
+                                    <li>Review your choice before submission</li>
+                                    <li>Confirm vote with final authentication</li>
+                                    <li>Receive encrypted vote confirmation</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-line"></div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="timeline-container">
+                <div class="bg-white rounded-xl shadow-md p-8 process-card card-hover transition-all duration-300">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/4 mb-6 md:mb-0">
+                            <div class="step-number">6</div>
+                            <h3 class="text-xl font-bold text-center text-blue-800">View Results</h3>
+                        </div>
+                        <div class="md:w-3/4 md:pl-8">
+                            <div class="bg-indigo-50 border-l-4 border-indigo-600 p-6 rounded-r-lg">
+                                <h4 class="font-bold text-indigo-800 mb-3 flex items-center">
+                                    <i class="fas fa-chart-bar mr-2"></i>
+                                    Transparent Results
+                                </h4>
+                                <p class="text-gray-700 mb-4">
+                                    Once voting closes, view real-time election results with detailed analytics. All results are transparent and verifiable through our audit system.
+                                </p>
+                                <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
+                                    <li>Access results immediately after voting closes</li>
+                                    <li>View detailed vote counts and percentages</li>
+                                    <li>Download official result certificates</li>
+                                    <li>Access voting audit trail for verification</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Features -->
+    <div class="max-w-4xl mx-auto mt-12">
+        <div class="bg-white rounded-xl shadow-md p-8 mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center justify-center">
+                <i class="fas fa-shield-alt text-blue-600 mr-3"></i>
+                Security & Privacy Features
+            </h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <h4 class="font-bold text-blue-800 mb-3 flex items-center">
+                        <i class="fas fa-lock mr-2"></i>
+                        Encryption & Security
+                    </h4>
+                    <ul class="text-blue-700 space-y-2 text-sm">
+                        <li>• End-to-end vote encryption</li>
+                        <li>• Multi-factor authentication</li>
+                        <li>• Blockchain vote verification</li>
+                        <li>• Real-time security monitoring</li>
+                        <li>• Regular security audits</li>
+                    </ul>
+                </div>
+                <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                    <h4 class="font-bold text-green-800 mb-3 flex items-center">
+                        <i class="fas fa-user-secret mr-2"></i>
+                        Privacy Protection
+                    </h4>
+                    <ul class="text-green-700 space-y-2 text-sm">
+                        <li>• Anonymous vote casting</li>
+                        <li>• No vote tracking to individuals</li>
+                        <li>• GDPR compliant data handling</li>
+                        <li>• Minimal data collection</li>
+                        <li>• Automatic data purging</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-headset text-blue-600 mr-2"></i>
+                Need Help?
+            </h3>
+            <p class="text-gray-600 mb-4">
+                Our support team is available 24/7 during election periods to assist you with any questions or technical issues.
+            </p>
+            <div class="flex flex-wrap gap-3">
+                <a href="mailto:support@voteeasy.com" class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg hover:bg-blue-200 transition font-medium">
+                    <i class="fas fa-envelope mr-2"></i>Email Support
+                </a>
+                <a href="tel:+91123456789" class="bg-green-100 text-green-800 px-4 py-2 rounded-lg hover:bg-green-200 transition font-medium">
+                    <i class="fas fa-phone mr-2"></i>Call Us
+                </a>
+                <a href="faq.html" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition font-medium">
+                    <i class="fas fa-question-circle mr-2"></i>FAQ
+                </a>
+                <a href="index.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium">
+                    <i class="fas fa-arrow-right mr-2"></i>Start Voting
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-vote-yea mr-2"></i> VoteEasy
+                </h3>
+                <p class="text-gray-400">Secure online voting platform for organizations and institutions.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="index.html" class="text-gray-400 hover:text-white transition">Elections</a></li>
+                    <li><a href="result.html" class="text-gray-400 hover:text-white transition">Results</a></li>
+                    <li><a href="about.html" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Legal</h4>
+                <ul class="space-y-2">
+                    <li><a href="privacy_policy.html" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                    <li><a href="tos.html" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Contact Us</h4>
+                <ul class="space-y-2">
+                    <li class="flex items-center">
+                        <i class="fas fa-envelope mr-2 text-gray-400"></i>
+                        <span>support@voteeasy.com</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-phone mr-2 text-gray-400"></i>
+                        <span>+91(123)456789</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                        <span>123 VoteEasy, Voting city</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2025 VoteEasy. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+    
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener("click", function() {
+            mobileMenu.classList.toggle("hidden");
+        });
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add smooth scroll animation for process cards
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observe all process cards
+    document.querySelectorAll('.process-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+});
+</script>
+
+</body>
+</html>
